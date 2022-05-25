@@ -1,0 +1,64 @@
+server:
+  port: 8760
+
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "localhost:8080"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: eureka
+          uri: lb://eureka
+          predicates:
+            - Path=/eureka/**
+        - id: demo
+          uri: lb://demo
+          predicates:
+            - Path=/demo/**
+          filters:
+            - StripPrefix=1
+            - Jwt
+        - id: demo2
+          uri: lb://demo2
+          predicates:
+            - Path=/demo2/**
+          filters:
+            - StripPrefix=1
+            - Jwt
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:9102/eureka/}
+    healthcheck:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - mappings
+          - env
+          - health
+          - info
+
+
+security:
+  jwtSecret: ThisIsASecret
+  jwtExpiration: 3600000
