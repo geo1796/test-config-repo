@@ -40,14 +40,6 @@ spring:
             - StripPrefix=1
             - Jwt
 
-eureka:
-  client:
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:9102/eureka/}
-    healthcheck:
-      enabled: true
-
 management:
   endpoints:
     web:
